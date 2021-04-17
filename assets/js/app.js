@@ -29,8 +29,15 @@ var chosenXAxis = "poverty";
 // Retrieve data from the CSV file and execute everything below
 d3.csv("assets/data/data.csv").then(function(state_data, err) {
     if (err) throw err;
-    
     console.log(state_data)
+
+    // Parse the data for our chart variables
+    state_data.forEach(function(data) {
+        data.income = +data.income;
+        data.obesity = +data.obesity;
+        data.poverty = +data.poverty;
+        data.age = +data.age;
+    });    
 
 }).catch(function(error) {
     console.log(error);
