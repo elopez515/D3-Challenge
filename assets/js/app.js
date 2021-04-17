@@ -26,6 +26,19 @@ var chartGroup = svg.append("g")
 // Initial Params
 var chosenXAxis = "poverty"; 
 
+// Create function to update x-scale var upon click on axis label
+function xScale(state_data, chosenXAxis) {
+  // create scales
+  var xLinearScale = d3.scaleLinear()
+    .domain([d3.min(state_data, d => d[chosenXAxis]) * 0.8,
+      d3.max(state_data, d => d[chosenXAxis]) * 1.2
+    ])
+    .range([0, width]);
+
+  return xLinearScale;
+
+}
+
 // Retrieve data from the CSV file and execute everything below
 d3.csv("assets/data/data.csv").then(function(state_data, err) {
     if (err) throw err;
