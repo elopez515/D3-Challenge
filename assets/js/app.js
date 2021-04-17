@@ -72,7 +72,18 @@ d3.csv("assets/data/data.csv").then(function(state_data, err) {
     // append y axis
     chartGroup.append("g")
         .call(leftAxis);
-        
+
+    // append initial circles
+    var circlesGroup = chartGroup.selectAll("circle")
+        .data(state_data)
+        .enter()
+        .append("circle")
+        .attr("cx", data => xLinearScale(data[chosenXAxis]))
+        .attr("cy", data => yLinearScale(data.age))
+        .attr("r", 10)
+        .attr("fill", "blue")
+        .attr("opacity", ".5");
+
 
 }).catch(function(error) {
     console.log(error);
