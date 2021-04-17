@@ -30,8 +30,8 @@ var chosenXAxis = "poverty";
 function xScale(state_data, chosenXAxis) {
   // create scales
   var xLinearScale = d3.scaleLinear()
-    .domain([d3.min(state_data, d => d[chosenXAxis]) * 0.8,
-      d3.max(state_data, d => d[chosenXAxis]) * 1.2
+    .domain([d3.min(state_data, data => data[chosenXAxis]) * 0.8,
+      d3.max(state_data, data => data[chosenXAxis]) * 1.2
     ])
     .range([0, width]);
 
@@ -51,6 +51,28 @@ d3.csv("assets/data/data.csv").then(function(state_data, err) {
         data.poverty = +data.poverty;
         data.age = +data.age;
     });    
+
+    var xLinearScale = xScale(state_data, chosenXAxis);
+
+    // Create y scale function
+    var yLinearScale = d3.scaleLinear()  
+        .domain([0, d3.max(state_data, data => data.age)])
+        .range([height, 0]);
+        
+    // Create initial axis functions
+    var bottomAxis = d3.axisBottom(xLinearScale);
+    var leftAxis = d3.axisLeft(yLinearScale);
+
+    // append x axis
+    var xAxis = chartGroup.append("g")
+        .classed("x-axis", true)
+        .attr("transform", `translate(0, ${height})`)
+        .call(bottomAxis);
+
+    // append y axis
+    chartGroup.append("g")
+        .call(leftAxis);
+        
 
 }).catch(function(error) {
     console.log(error);
