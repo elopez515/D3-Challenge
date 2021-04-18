@@ -106,6 +106,13 @@ d3.csv("assets/data/data.csv").then(function(state_data, err) {
     .classed("active", true)
     .text("Poverty Level");
 
+  var obesityLabel = xlabelsGroup.append("text")
+    .attr("x", 0)
+    .attr("y", 40)
+    .attr("value", "obesity") // value to grab for event listener
+    .classed("inactive", true)
+    .text("Obesity Level");
+
   // Create group for two y-axis labels
   var ylabelsGroup = chartGroup.append("g")
     .attr("transform", `translate(${width / 2}, ${height + 20})`);
@@ -119,7 +126,13 @@ d3.csv("assets/data/data.csv").then(function(state_data, err) {
     .classed("active", true)
     .text("Age");
 
-
+    var incomeLabel = chartGroup.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 20 - margin.left)
+    .attr("x", 0 - (height / 2))
+    .attr("value", "income")
+    .classed("inactive", true)
+    .text("Income");
 
 }).catch(function(error) {
     console.log(error);
