@@ -25,6 +25,7 @@ var chartGroup = svg.append("g")
 
 // Initial Params
 var chosenXAxis = "poverty"; 
+var chosenYAxis = "age"; 
 
 // Create function to update x-scale var upon click on axis label
 function xScale(state_data, chosenXAxis) {
@@ -39,6 +40,18 @@ function xScale(state_data, chosenXAxis) {
 
 }
 
+function yScale(state_data, chosenYAxis) {
+  // create scales
+  var yLinearScale = d3.scaleLinear()
+    .domain([0, d3.max(state_data, data => data[chosenYAxis]),
+      d3.max(state_data, data => data[chosenYAxis])
+    ])
+    .range([height, 0]);
+
+  return yLinearScale;
+
+}
+
 // Retrieve data from the CSV file and execute everything below
 d3.csv("assets/data/data.csv").then(function(state_data, err) {
     if (err) throw err;
@@ -50,14 +63,12 @@ d3.csv("assets/data/data.csv").then(function(state_data, err) {
         data.obesity = +data.obesity;
         data.poverty = +data.poverty;
         data.age = +data.age;
+        data.abbr = +data.abbr;
     });    
 
     var xLinearScale = xScale(state_data, chosenXAxis);
 
-    // Create y scale function
-    var yLinearScale = d3.scaleLinear()  
-        .domain([0, d3.max(state_data, data => data.age)])
-        .range([height, 0]);
+    var yLinearScale = yScale(state_data, chosenYAxis);
         
     // Create initial axis functions
     var bottomAxis = d3.axisBottom(xLinearScale);
@@ -79,10 +90,35 @@ d3.csv("assets/data/data.csv").then(function(state_data, err) {
         .enter()
         .append("circle")
         .attr("cx", data => xLinearScale(data[chosenXAxis]))
-        .attr("cy", data => yLinearScale(data.age))
+        .attr("cy", data => yLinearScale(data[chosenYAxis]))
         .attr("r", 10)
         .attr("fill", "blue")
         .attr("opacity", ".5");
+
+  // Create group for two x-axis labels
+  var xlabelsGroup = chartGroup.append("g")
+    .attr("transform", `translate(${width / 2}, ${height + 20})`);
+
+  var povertyLabel = xlabelsGroup.append("text")
+    .attr("x", 0)
+    .attr("y", 20)
+    .attr("value", "poverty") // value to grab for event listener
+    .classed("active", true)
+    .text("Poverty Level");
+
+  // Create group for two y-axis labels
+  var ylabelsGroup = chartGroup.append("g")
+    .attr("transform", `translate(${width / 2}, ${height + 20})`);
+
+  // append y axis
+  var ageLabel = chartGroup.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 40 - margin.left)
+    .attr("x", 0 - (height / 2))
+    .attr("value", "age")
+    .classed("active", true)
+    .text("Age");
+
 
 
 }).catch(function(error) {
