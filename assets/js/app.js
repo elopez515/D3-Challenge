@@ -66,13 +66,9 @@ d3.csv("assets/data/data.csv").then(function(state_data, err) {
         data.abbr =  data.abbr;
     });    
 
+    // initialize our Linear Scales for both axis
     var xLinearScale = xScale(state_data, chosenXAxis);
     var yLinearScale = yScale(state_data, chosenYAxis);
-
-    // // Create y scale function
-    // var yLinearScale = d3.scaleLinear()  
-    //     .domain([0, d3.max(state_data, data => data[chosenYAxis])])
-    //     .range([height, 0]);
         
     // Create initial axis functions
     var bottomAxis = d3.axisBottom(xLinearScale);
@@ -87,17 +83,6 @@ d3.csv("assets/data/data.csv").then(function(state_data, err) {
     // append y axis
     var yAxis = chartGroup.append("g")
         .call(leftAxis);
-
-    // // append initial circles
-    // var circlesGroup = chartGroup.selectAll("circle")
-    //     .data(state_data)
-    //     .enter()
-    //     .append("circle")
-    //     .attr("cx", data => xLinearScale(data[chosenXAxis]))
-    //     .attr("cy", data => yLinearScale(data[chosenYAxis]))
-    //     .attr("r", 10)
-    //     .attr("fill", "blue")
-    //     .attr("opacity", ".5");
 
     // Set data used for circles.
     var circlesGroup = chartGroup.selectAll("circle")
@@ -118,7 +103,7 @@ d3.csv("assets/data/data.csv").then(function(state_data, err) {
         .attr("y", ".30em") 
         .text(data => data.abbr)
         .classed("stateText", true);
-        
+
     // Create group for two x-axis labels
     var xlabelsGroup = chartGroup.append("g")
       .attr("transform", `translate(${width / 2}, ${height + 20})`);
