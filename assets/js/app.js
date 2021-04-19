@@ -1,6 +1,8 @@
+// Set height and width paramaters for our chart area
 var svgWidth = 960;
 var svgHeight = 500;
 
+// Set margins for our chart area
 var margin = {
   top: 20,
   right: 40,
@@ -8,6 +10,7 @@ var margin = {
   left: 100
 };
 
+// Calculate for the actual plotting area of our chart
 var width = svgWidth - margin.left - margin.right;
 var height = svgHeight - margin.top - margin.bottom;
 
@@ -40,6 +43,7 @@ function xScale(state_data, chosenXAxis) {
 
 }
 
+// Create function to update y-scale var upon click on axis label
 function yScale(state_data, chosenYAxis) {
   // create scales
   var yLinearScale = d3.scaleLinear()
@@ -59,11 +63,8 @@ d3.csv("assets/data/data.csv").then(function(state_data, err) {
 
     // Parse the data for our chart variables
     state_data.forEach(function(data) {
-        data.income = +data.income;
         data.obesity = +data.obesity;
         data.poverty = +data.poverty;
-        data.age = +data.age;
-        data.abbr =  data.abbr;
     });    
 
     // initialize our Linear Scales for both axis
@@ -90,13 +91,14 @@ d3.csv("assets/data/data.csv").then(function(state_data, err) {
     // Bind our data to our circles
     var enter = circlesGroup.enter();
 
-    // append initial circles
+    // Append our plot points as circles
     var circle = enter.append("circle")
         .attr("cx", data => xLinearScale(data[chosenXAxis]))
         .attr("cy", data => yLinearScale(data[chosenYAxis]))
         .attr("r", 15)
         .classed("stateCircle", true);
 
+    // Append state names to our circles
     var circlesText = enter.append("text")
         .attr("dx", data => xLinearScale(data[chosenXAxis]))
         .attr("dy",  data => yLinearScale(data[chosenYAxis]))
@@ -104,10 +106,11 @@ d3.csv("assets/data/data.csv").then(function(state_data, err) {
         .text(data => data.abbr)
         .classed("stateText", true);
 
-    // Create group for two x-axis labels
+    // Create group for the x-axis labels
     var xlabelsGroup = chartGroup.append("g")
       .attr("transform", `translate(${width / 2}, ${height + 20})`);
   
+    // Append the label for the x axis
     var povertyLabel = xlabelsGroup.append("text")
       .attr("x", 0)
       .attr("y", 20)
@@ -115,7 +118,7 @@ d3.csv("assets/data/data.csv").then(function(state_data, err) {
       .classed("active", true)
       .text("Poverty Level");
 
-    // append y axis
+    // Append the label for the y axis
     var obesityLabel = chartGroup.append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", 40 - margin.left)
